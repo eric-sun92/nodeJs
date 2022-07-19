@@ -165,3 +165,27 @@ video 10: rough one made me want to stop coding for a couple days lol
 -create a get req method, and make the path "blogs/:id" and whenever u go to a url that follows this pattern (ie blogs/1) this will set id to 1. inside the req,res method u need to set a constant to grab the id using req.params.id
 -use the mongoose findById(id) this returns a promise and in the then just render a specific page passing in the result \*promise paramater in the object as a blog then u can use blog.id / blog.body or whatever other properties that the object blog had.
 -in the details page (newly rendered page) u can include a delete button that will delete the object/blog
+
+video 11: (express Router and MVC)
+-this just cleans code up a lot nicer
+-express Router is used to group together similar routes
+-all /blogs routes for example can go into its own file called blogRoutes which i put in a folder called routes for other routes
+-then u just create a mini independent app, and call express.Router and set it equal to router,
+-instead of app.get etc, u can use router.get('/') (get rid of the /blogs part \*this goes in the app.use() in the main file later)
+-and then export the router at the end
+-then in the main folder, u just do app.use('/blog or whatever is the same group path', blogRoutes) and define blogRoutes to be require('path to the newly created folder with all blogRoutes) this way u are calling on the express.Router() function u created in previous file
+-MVC APPROACH \*important for developers to keep separate parts of project esp when its big
+-model = takes care of data
+-view = takes care of visuals/ejs files
+-controller = connects model and view
+
+- in this project we alr have the views folder/section and models folder/section, next we create a controllers folder that contains all the logic of getting stuff from both views and models then pass it into the app.js which contains all the routes
+
+-FINISHED THIS LIL STARTER PROJECT
+-what i learned: basics of nodejs
+-mvc model to structure project
+-model -> mongoDB basics (schema, model, querys, etc, creating new objects, deleting them, etc)
+-view -> ejs, view engine, static and dynamic rendering of pages, js implementation, partials, passing in objects to files in render function, etc
+-model -> mongoose functions, express functions, importing the model module
+
+    extras: got better understanding/practice of promises, basics of express (render/send/status/ and ofc get/post/delete/put/use), middleware understanding (using morgan api as logger middleware)/ next() usecase, mongoose basics and connecting url to database, and use of view engine
