@@ -1,0 +1,167 @@
+this is video 3 review - real backend journey starts
+learned about clients and servers
+
+we create a server powered by nodejs that can recieve requests and send responses to computers/clients
+our server has a host which is our computer and this has a specific ip address that the request is sent to
+the ip address is masked by a domain name
+
+browser client sends a request to node js server
+the server then send a response back to the browser
+usually a https file
+
+learned about ip addresses
+each device connected to the internet has a specific
+ip address which is just a set of numbers
+this set is masked by a domain name which is easier to
+understand and access and remember (ie. google.com)
+each time a request is sent to a server, we find the correct server using the specific ip address
+
+client and server communicate with HTTP (hyper-text transfer protocol)
+get request is sent to server when trying to load a page
+it looks up the ip address associated with domain name and then
+the server with that ip address sends an html file ie HTTP back to the client
+
+Local host is domain name that is a specific ip address that points back to own computer
+hosting our website on own computer
+port numbers represents a port (or door) on my computer that keeps data separate from each program
+communicating thru port 3000 for local web dev
+localhost:3000 tells browser that we are connecting to our own computer via port 3000
+
+created own server listening for requests.
+
+create server using http.createServer() which takes cb function
+cb function runs when server is created and takes in a req and res object
+
+the req object has multiple properties including req.url
+
+response object is the object you send back to the web browser
+you can change the res.status depending on error/success
+you can read from multiple files and write it to the response
+res.end when you are finished updating res and want to send it back to client
+
+video 4-6 notes
+
+video 4:
+requests and responses as objects
+you get them in the callback function that is fired whenever you get a request from client
+res.write
+
+learned about http module
+
+http.createServer takes a call back function that fires whenver a req is got from client
+
+can go to different pages with the switch statements and changing the paths depending on what req u want (req.url) -note: have to set status code for each case
+then use the path u made and read the file with the same path and write it to the browser with fs.write(data)
+end with res.end()
+
+note- always check for error when reading file and console.log the error
+
+video 5: npm
+
+this was difficult to first understand/had lots of troubles/debugging cuz my comp was being dumb with security accesses
+
+-but basically u can download packages that act as frameworks that make the code a lot easier to write/read
+
+-learned about the lodash package
+-when you publish to github u don't include the large node_modules folder that contains all the frameworks code
+-instead just run npm install when you download the code on another comp
+-this checks the dependencies in package.json and downlaods everything u need
+
+-for this we use npm install express
+
+video 6: express basics
+
+express is a framework that allows running server much easier (don't have to hard code all the different switch statements depending on different req.urls)
+
+instead just create a server using
+
+let app = express() and set it equal to a variable which will control most of the requests
+app.listen(port number) will do the same as server.listen
+then u can use app.get() which takes a cb function that fires when u get a req that matches
+the req.url that is the first parameter
+
+app.use will catch the last case when no app.gets are triggered to simulate the default 404 case
+
+video 7: view enginenes (allows dynamic data to be injected into the html that we send back to browser)
+-ejs
+much easier to render pages to site
+instead of res.sendFile() we can just use res.render('path to file', data u want to pass into the file)
+with ejs file we can use js logic inside the _html file_ with the <% %> tags. use = when using variables, and use - when using include
+include('path to file') will allow usage of partials to resuse separate portions of html code
+the data u pass into the file after the path to file in render function can be used in the html as variables/objects
+
+video 8: middleware (code that runs in between request and response)
+-learned about app.use() and app.next() which allows browser to auto fire the use then move on
+-learned about the morgan 3rd party middleware
+-require morgan then call it with morgan() using below line
+-this is a logger middleware with _app.use('morgan('dev))
+-alos learned about static public files in order to give access to a folder to browser
+-used to link css stylesheet to html pages with
+-app.use(express.static('public' _ or name of folder u want public))
+
+video 9: (mongoDB) *this is a big one lol
+-learned about the mongoDB (a NoSQL data base used to store data *more specifically collections)
+-in monngo cloud atlas, created a free collection where i will store blog documents
+-once you create it and give myself access to the data base, using the stringKey and connecting your js doc to the db with mongoose.connect('key')
+-this returns a promise, u want to start listening to reqs on success
+
+-before u can use the mongoose functions, u need to require the mongoose module
+-this gives u functions to access the mongoDB collection
+
+-when u connect mongoDB to your app, u need to create a new file to define the Schema(structure of the documents within the collection)
+-then just require the new Schema(s) into your main app.js doc to access it
+
+-in the other doc, (modules folder -> blogs.js) you need to first require the mongoose module
+-create a new Schema using the mongoose.Schema function
+-within a schema define the structure style
+const var = new Schema(){
+-key: value,
+key2: {key2* : value2*,
+key2** : value2**}
+body: {
+type: String,
+required: true
+}, {timestamps, true} <-- gives the timestamps of unpdates/create \* used to sort by new later when rendering the files/data>
+}
+
+    -then just use const 'exporting title' = mongoose.model('title', var)
+    -export the title using module.exports = 'exporting title'
+
+\*random side note that i just thought of lol - when ur returning a promise always do soemthing with result in then and in the catch CONSOLE.LOG(THE ERR)
+
+in main function u need to import the previous doc to get access the the schema/model u just made
+in a app.get function u can access the DB with 'imported title' (Blog)
+-create a new blog object and add it to the database
+-const blog = new Blog({
+fill in the structure
+ie. title: "blog title",
+snippet: "eric's blog",... etc
+})
+-then u save it to the database using blog.save() *this is a promise
+result is a mongoDB object (u can res.send(result))
+or once u created a few objects u can access them directly
+-Blog.find() *this is a promise where u can just res.send(result)
+-Blog.findbyID('this is auto-generated ID for each object in mongoDB)
+
+ok but like this has no logic and what i previously made is kinda pointless but good to learn/practice how db logic works lol (also it sends a res of like huge DB_object_string that nobody can understand)
+
+better way is to access the db during the app.get that we previously made
+then Blog.find() [tag on a .sort({createdAt: -1}) here to sort by newest \*this is a promise (result) => {
+res.render('whatever file-path u want', {
+title: 'whatever string u want to make title,
+blogs: result
+})
+}
+
+video 10: rough one made me want to stop coding for a couple days lol
+-if ur getting mongodb access errors try giving access to all ips
+-if u want to access req.body, u need to use app.use(express.urlencoded({extended:true}))
+-fire a req from form using action="/path/" and method="POST"
+-u also need name attributes in form which become the key in key value pairs inside the Schema that u created for the DB. this goes to the req.body as well as the info u pass inside the name textboxes
+-then inside app.js u need a post request which will take in the req and res as well as the path u match with the action inside the form
+-use the req.body and make a new model with schema(req.body)
+-save this to the DB with var_name.save() \*this is a promise so in the then u want to redirect to the /blogs page, and in the catch just log the err
+-req params are the /id in the req url, u can use the ":" to denote a dynamic id
+-create a get req method, and make the path "blogs/:id" and whenever u go to a url that follows this pattern (ie blogs/1) this will set id to 1. inside the req,res method u need to set a constant to grab the id using req.params.id
+-use the mongoose findById(id) this returns a promise and in the then just render a specific page passing in the result \*promise paramater in the object as a blog then u can use blog.id / blog.body or whatever other properties that the object blog had.
+-in the details page (newly rendered page) u can include a delete button that will delete the object/blog
